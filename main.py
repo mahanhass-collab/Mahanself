@@ -111,24 +111,21 @@ def convert_to_classic_font(text):
     return text.translate(font_map)
 
 def get_date_time_info():
-    now = datetime.now(iran_tz)  # اکنون با تایم ایران
+    now = datetime.now(iran_tz)
     gregorian_date = now.strftime("%Y/%m/%d")
     time_now = now.strftime("%H:%M:%S")
-    jalali_date = jdatetime.datetime.now(iran_tz).strftime("%Y/%m/%d")
+    jalali_date = jdatetime.datetime.now().strftime("%Y/%m/%d")
     day_name_en = calendar.day_name[now.weekday()]
     month_name_en = calendar.month_name[now.month]
     day_name_fa = day_names_fa[day_name_en]
     month_name_fa = month_names_fa[month_name_en]
-    jalali_month_index = int(jdatetime.datetime.now(iran_tz).strftime("%m")) - 1
+    jalali_month_index = int(jdatetime.datetime.now().strftime("%m")) - 1
     jalali_month_name_fa = jalali_month_names_fa[jalali_month_index]
     utc_date = datetime.utcnow().strftime("%A %Y-%m-%d %H:%M:%S")
-    remaining_days_in_month = calendar.monthrange(now.year, now.month)[1] - now.day
-    remaining_days_in_year = (datetime(now.year, 12, 31) - now).days
     return {
         'gregorian_date': gregorian_date,'jalali_date': jalali_date,'time_now': time_now,
         'day_name_en': day_name_en,'day_name_fa': day_name_fa,'month_name_en': month_name_en,
-        'month_name_fa': month_name_fa,'jalali_month_name_fa': jalali_month_name_fa,'utc_date': utc_date,
-        'remaining_days_in_month': remaining_days_in_month,'remaining_days_in_year': remaining_days_in_year
+        'month_name_fa': month_name_fa,'jalali_month_name_fa': jalali_month_name_fa,'utc_date': utc_date
     }
 
 time_enabled = False
@@ -272,10 +269,11 @@ async def main():
     await client.start()
     print("ربات در حال اجرا است...")
     asyncio.create_task(update_profile_name(client))
+    await client.run_until_disconnected()  # ← اضافه شد تا برنامه زنده بمونه
 
 @client.on(events.NewMessage)
 async def new_message_handler(event):
     await handle_new_message(event)
 
 if __name__=="__main__":
-    asyncio.run(main()) 
+    asyncio.run(main())
