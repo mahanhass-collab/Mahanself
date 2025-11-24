@@ -19,8 +19,12 @@ jobs:
         with:
           python-version: "3.10"
 
-      - name: Install deps
+      - name: Install dependencies
         run: pip install -r requirements.txt
 
       - name: Run Bot
-        run: python main.py
+        run: |
+          while true; do
+            python main.py
+            sleep 300
+          done 
