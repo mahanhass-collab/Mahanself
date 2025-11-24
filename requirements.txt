@@ -1,4 +1,5 @@
 telethon
 jdatetime
 pytz
+asyncio
 
